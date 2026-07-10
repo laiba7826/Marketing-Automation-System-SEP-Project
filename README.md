@@ -2,7 +2,7 @@
 
 # 🚀 MarkAuto – Marketing Automation System
 
-### 🏢 Developed for **GFS Builders**
+### 🏢 Developed to **Automate**
 
 <p>
 An intelligent role-based Marketing & Lead Management platform that streamlines campaign planning, lead tracking, budget approvals, and collaboration across multiple departments.
