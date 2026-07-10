@@ -162,39 +162,12 @@ Automation-System
 
 ---
 
-# ⚙ Installation
+## 🖼️ Landing Page Preview
 
-### Clone Repository
+<p align="center">
+  <img src="assets/landing-page.png" alt="MarkAuto Landing Page" width="100%">
+</p>
 
-```bash
-git clone <repository-link>
-```
-
-### Install Dependencies
-
-```bash
-pip install flask
-```
-
-### Initialize Database
-
-```bash
-python init_db.py
-```
-
-### Run Application
-
-```bash
-python app.py
-```
-
-Open:
-
-```
-http://127.0.0.1:5000
-```
-
----
 
 # 👨‍💻 Team Contributions
 
