@@ -21,7 +21,7 @@ An intelligent role-based Marketing & Lead Management platform that streamlines 
 
 # 🌟 Overview
 
-**MarkAuto** is a full-stack web application designed to automate and simplify marketing operations for **GFS Builders**.
+**Marketing Automation System** is a full-stack web application designed to automate and simplify marketing operations
 
 The system connects multiple departments through dedicated dashboards and role-based permissions, enabling seamless collaboration between Marketing, Sales, Content Creators, Project Supervisors, and Administrators.
 
