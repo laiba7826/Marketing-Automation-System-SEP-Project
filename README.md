@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 MarkAuto – Marketing Automation System
+# 🚀 Marketing Automation System_SEP Project
 
 ### 🏢 Developed to **Automate**
 
