@@ -1,0 +1,58 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Conduct Training - GFS Supervisor{% endblock %}
+{% block header %}Conduct Training{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 30px;">
+    <h3>Schedule New Training Session</h3>
+    <form action="{{ url_for('portal_supervisor_training') }}" method="POST" style="margin-top: 20px;">
+        <div class="row" style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 250px;">
+                <label for="trainee_name">Trainee Name</label>
+                <input type="text" id="trainee_name" name="trainee_name" class="form-control" required placeholder="Enter trainee name">
+            </div>
+            <div class="form-group" style="flex: 1; min-width: 250px;">
+                <label for="schedule_date">Schedule Date</label>
+                <input type="date" id="schedule_date" name="schedule_date" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 15px;">
+            <label for="workshop_purpose">Workshop Purpose</label>
+            <textarea id="workshop_purpose" name="workshop_purpose" class="form-control" rows="3" required placeholder="What is the goal of this training? (e.g., stay updated on trends and tools)"></textarea>
+        </div>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary">Schedule Training Session</button>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    <h3>Training History & Upcoming Sessions</h3>
+    <table class="table" style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>Schedule Date</th>
+                <th>Workshop Purpose</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td><strong>{{ session.trainee_name }}</strong></td>
+                <td>{{ session.schedule_date }}</td>
+                <td>{{ session.workshop_purpose }}</td>
+                <td style="font-size: 0.8em; color: gray;">{{ session.created_at }}</td>
+            </tr>
+            {% endfor %}
+            {% if not sessions %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 20px;">No training sessions scheduled yet.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

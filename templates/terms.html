@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - {{ site.site.title if site.site else 'GFS System' }}{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title">Terms of Service</h1>
+        <div class="card" style="text-align: left; line-height: 1.8;">
+            <h3>1. Acceptance of Terms</h3>
+            <p>By accessing or using the GFS Marketing Automation System, you agree to be bound by these Terms of
+                Service.</p>
+
+            <h3>2. Description of Service</h3>
+            <p>GFS provides a marketing automation platform for campaign management, budget tracking, and team
+                collaboration. We reserve the right to modify or discontinue the service at any time.</p>
+
+            <h3>3. User Responsibilities</h3>
+            <p>You are responsible for maintaining the confidentiality of your login credentials and for all activities
+                that occur under your account.</p>
+
+            <h3>4. Prohibited Conduct</h3>
+            <p>You agree not to use the service for any illegal or unauthorized purpose, or to interfere with the proper
+                functioning of the system.</p>
+
+            <h3>5. Limitation of Liability</h3>
+            <p>To the maximum extent permitted by law, GFS shall not be liable for any indirect, incidental, special,
+                consequential, or exemplary damages related to your use of the service.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

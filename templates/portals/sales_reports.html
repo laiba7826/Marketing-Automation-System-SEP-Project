@@ -1,0 +1,95 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Sales Reports - GFS Sales{% endblock %}
+{% block header %}Performance Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media print {
+
+        .sidebar,
+        .admin-header,
+        .no-print,
+        .user-info,
+        .flash-messages {
+            display: none !important;
+        }
+
+        .admin-content {
+            margin-left: 0 !important;
+            padding: 0 !important;
+        }
+
+        .admin-container {
+            display: block !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #eee !important;
+            break-inside: avoid;
+        }
+
+        body {
+            background: white !important;
+            color: black !important;
+        }
+
+        .grid-2 {
+            display: block !important;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+    <div class="card">
+        <h3>Conversion Summary</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                    <th>Revenue ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in stats %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>${{ "{:,.2f}".format(row[2] or 0) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>Weekly Activity</h3>
+        <div style="height: 200px; display: flex; align-items: flex-end; gap: 10px; padding: 20px;">
+            <div style="flex:1; background: var(--primary-color); height: 40%; border-radius: 3px;"
+                title="Mon: 4 leads"></div>
+            <div style="flex:1; background: var(--primary-color); height: 60%; border-radius: 3px;"
+                title="Tue: 6 leads"></div>
+            <div style="flex:1; background: var(--primary-color); height: 30%; border-radius: 3px;"
+                title="Wed: 3 leads"></div>
+            <div style="flex:1; background: var(--primary-color); height: 80%; border-radius: 3px;"
+                title="Thu: 8 leads"></div>
+            <div style="flex:1; background: var(--secondary-color); height: 95%; border-radius: 3px;"
+                title="Fri: 11 leads"></div>
+        </div>
+        <p style="text-align: center; margin-top: 10px; color: #777;">Leads generated this week</p>
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+            <button onclick="window.print()" class="btn btn-primary no-print">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GFS Admin{% endblock %}</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="{{ theme + '-theme' if theme and theme != 'default' else '' }}">
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3>GFS Admin</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('admin_dashboard') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_dashboard' else '' }}">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a></li>
+                <li><a href="{{ url_for('admin_messages') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_messages' else '' }}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a></li>
+                <li><a href="{{ url_for('admin_profile') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_profile' else '' }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a></li>
+                <li><a href="{{ url_for('admin_users') }}"
+                        class="{{ 'active' if request.endpoint in ['admin_users', 'admin_add_user', 'admin_edit_user'] else '' }}">
+                        <i class="fas fa-users"></i> Manage Users
+                    </a></li>
+                <li><a href="{{ url_for('admin_campaigns') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_campaigns' else '' }}">
+                        <i class="fas fa-bullhorn"></i> Campaigns
+                    </a></li>
+                <li><a href="{{ url_for('admin_reports') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_reports' else '' }}">
+                        <i class="fas fa-chart-line"></i> Reports
+                    </a></li>
+                <li><a href="{{ url_for('admin_site') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_site' else '' }}">
+                        <i class="fas fa-globe"></i> Manage Site
+                    </a></li>
+                <li><a href="{{ url_for('admin_settings') }}"
+                        class="{{ 'active' if request.endpoint == 'admin_settings' else '' }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                <li><a href="{{ url_for('logout') }}"
+                        style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a></li>
+            </ul>
+        </nav>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <header class="admin-header">
+                <h2>{% block header %}{% endblock %}</h2>
+                <div class="user-info">
+                    <span>Admin User</span> <i class="fas fa-user-circle fa-lg"
+                        style="margin-left: 10px; color: var(--primary-color);"></i>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <p>Logged in as</p>
+                            <h4>Admin</h4>
+                        </div>
+                        <a href="{{ url_for('admin_profile') }}" class="user-dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="{{ url_for('admin_settings') }}" class="user-dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-item" style="color: #dc3545;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

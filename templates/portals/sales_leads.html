@@ -1,0 +1,84 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Manage Leads - GFS Sales{% endblock %}
+{% block header %}Pipeline Management{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>Sales Pipeline</h3>
+        <button class="btn btn-primary small-btn" onclick="document.getElementById('addModal').style.display='flex'"><i
+                class="fas fa-plus"></i> Add New Lead</button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Revenue ($)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>{{ lead.id }}</td>
+                <td>{{ lead.name }}</td>
+                <td>{{ lead.email }}</td>
+                <td>
+                    <form action="{{ url_for('portal_sales_update_lead', lead_id=lead.id) }}" method="POST">
+                        <select name="status" onchange="this.form.submit()" class="form-control" style="padding: 2px;">
+                            <option value="New" {{ 'selected' if lead.status=='New' else '' }}>New</option>
+                            <option value="Contacted" {{ 'selected' if lead.status=='Contacted' else '' }}>Contacted
+                            </option>
+                            <option value="Follow-up" {{ 'selected' if lead.status=='Follow-up' else '' }}>Follow-up
+                            </option>
+                            <option value="Closed" {{ 'selected' if lead.status=='Closed' else '' }}>Closed</option>
+                            <option value="Lost" {{ 'selected' if lead.status=='Lost' else '' }}>Lost</option>
+                        </select>
+                </td>
+                <td>
+                    <input type="number" name="revenue" value="{{ lead.revenue }}" step="0.01" style="width: 80px;"
+                        onblur="this.form.submit()">
+                    </form>
+                </td>
+                <td>
+                    <button class="btn btn-secondary small-btn"><i class="fas fa-envelope"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not leads %}
+            <tr>
+                <td colspan="6" style="text-align: center;">No leads in pipeline.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Modal -->
+<div id="addModal"
+    style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div class="card" style="width: 400px; text-align: left; background: white; padding: 20px;">
+        <h3>Add New Lead</h3>
+        <form action="{{ url_for('portal_sales_add_lead') }}" method="POST">
+            <div class="form-group">
+                <label>Prospect Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn"
+                    onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Lead</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

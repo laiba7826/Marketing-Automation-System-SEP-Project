@@ -1,0 +1,124 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Manage Site - GFS Admin{% endblock %}
+{% block header %}CMS Content Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3>Landing Page Text</h3>
+    <form action="{{ url_for('admin_update_site_content') }}" method="POST">
+        {% for row in content %}
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label>{{ row.page|capitalize }} / {{ row.section }} / {{ row.key }}</label>
+            <textarea name="content_{{ row.id }}" class="form-control" rows="2">{{ row.value }}</textarea>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Save All Text</button>
+    </form>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+    <h3>Features Section</h3>
+    <div class="grid-2">
+        {% for f in features %}
+        <div class="card" style="border: 1px solid #eee;">
+            <form action="{{ url_for('admin_update_feature', feature_id=f.id) }}" method="POST">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ f.title }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Icon (FontAwesome class)</label>
+                    <input type="text" name="icon" value="{{ f.icon }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" rows="3">{{ f.description }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary small-btn">Update {{ f.title }}</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+    <h3>How It Works Section</h3>
+    <div class="grid-2">
+        {% for s in steps %}
+        <div class="card" style="border: 1px solid #eee;">
+            <form action="{{ url_for('admin_update_step', step_id=s.id) }}" method="POST">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ s.title }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Icon</label>
+                    <input type="text" name="icon" value="{{ s.icon }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" rows="3">{{ s.description }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary small-btn">Update Step</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+    <h3>Tech Stack Section</h3>
+    <div class="grid-3">
+        {% for t in tech %}
+        <div class="card" style="border: 1px solid #eee;">
+            <form action="{{ url_for('admin_update_tech', tech_id=t.id) }}" method="POST">
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" name="category" value="{{ t.category }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ t.title }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Icon</label>
+                    <input type="text" name="icon" value="{{ t.icon }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" rows="3">{{ t.description }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary small-btn">Update Tech</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card" style="margin-top: 30px;">
+    <h3>Roles Section</h3>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Icon</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in roles %}
+                <tr>
+                    <td>{{ r.role_name }}</td>
+                    <td><i class="{{ r.icon }}"></i></td>
+                    <td>{{ r.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p style="font-size: 0.8rem; color: #777; margin-top: 10px;">Note: Role descriptions and permissions are
+            currently managed via the database for security.</p>
+    </div>
+</div>
+{% endblock %}

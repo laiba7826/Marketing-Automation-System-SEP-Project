@@ -1,0 +1,201 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Creator Dashboard - GFS{% endblock %}
+{% block header %}Content Studio{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ scheduled_count }}</h3>
+            <p>Scheduled Posts</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-users-cog"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ influencer_count }}</h3>
+            <p>Active Influencers</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="table-container">
+        <h3>Assigned Campaigns & Strategies</h3>
+        {% for campaign in assigned_campaigns %}
+        <div class="card" style="text-align: left; margin-bottom: 20px; border-left: 5px solid var(--secondary-color);">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h4>{{ campaign.title }}</h4>
+                    <p style="font-size: 0.9rem; color: #777;">Budget: ${{ "{:,.2f}".format(campaign.amount or 0) }}</p>
+                </div>
+                <button class="btn btn-primary small-btn" onclick="toggleForm('add-strategy-{{ campaign.id }}')">
+                    <i class="fas fa-plus"></i> New Draft
+                </button>
+            </div>
+
+            <!-- Add Strategy Form -->
+            <div id="add-strategy-{{ campaign.id }}"
+                style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                <form action="{{ url_for('portal_content_add_strategy') }}" method="POST">
+                    <input type="hidden" name="campaign_id" value="{{ campaign.id }}">
+                    <div class="form-group">
+                        <input type="text" name="title" class="form-control"
+                            placeholder="Strategy Title (e.g. Instagram Reels Plan)" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" rows="3" placeholder="Describe the strategy..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary small-btn">Save Draft</button>
+                    <button type="button" class="btn btn-secondary small-btn"
+                        onclick="toggleForm('add-strategy-{{ campaign.id }}')">Cancel</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h5>Strategy Drafts</h5>
+                {% set campaign_strategies = [] %}
+                {% for s in strategies %}
+                {% if s.campaign_id == campaign.id %}
+                <div class="strategy-item"
+                    style="background: var(--light-gray); padding: 15px; border-radius: 5px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div id="view-strategy-{{ s.id }}">
+                            <strong>{{ s.title }}</strong>
+                            <p style="font-size: 0.9rem; margin-top: 5px;">{{ s.content }}</p>
+                            <small style="color: #999;">{{ s.created_at[:16] }}</small>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-edit small-btn" data-id="{{ s.id }}" data-title="{{ s.title }}"
+                                data-content="{{ s.content }}" onclick="editStrategy(this)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="{{ url_for('portal_content_delete_strategy', strategy_id=s.id) }}"
+                                method="POST" onsubmit="return confirm('Delete this strategy?')">
+                                <button type="submit" class="btn btn-delete small-btn" style="padding: 5px 10px;"><i
+                                        class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Edit Form (Hidden) -->
+                    <div id="edit-strategy-{{ s.id }}" style="display: none;">
+                        <form action="{{ url_for('portal_content_edit_strategy', strategy_id=s.id) }}" method="POST">
+                            <div class="form-group">
+                                <input type="text" id="edit-title-{{ s.id }}" name="title" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="edit-content-{{ s.id }}" name="content" class="form-control" rows="3"
+                                    required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary small-btn">Update</button>
+                            <button type="button" class="btn btn-secondary small-btn"
+                                onclick="cancelEdit('{{ s.id }}')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not assigned_campaigns %}
+        <div class="card" style="text-align: center;">
+            <p>No projects assigned yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleForm(id) {
+            const form = document.getElementById(id);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function editStrategy(btn) {
+            const id = btn.getAttribute('data-id');
+            const title = btn.getAttribute('data-title');
+            const content = btn.getAttribute('data-content');
+
+            document.getElementById('view-strategy-' + id).style.display = 'none';
+            document.getElementById('edit-strategy-' + id).style.display = 'block';
+            document.getElementById('edit-title-' + id).value = title;
+            document.getElementById('edit-content-' + id).value = content;
+        }
+
+        function cancelEdit(id) {
+            document.getElementById('view-strategy-' + id).style.display = 'block';
+            document.getElementById('edit-strategy-' + id).style.display = 'none';
+        }
+    </script>
+
+    <div class="table-container">
+        <h3>Influencer Proposals Status</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Influencer</th>
+                    <th>Requested</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.title }}</td>
+                    <td>${{ "{:,.2f}".format(req.amount or 0) }}</td>
+                    <td>
+                        {% if req.status == 'Pending' %}
+                        <span style="color: orange;">Pending Review</span>
+                        {% elif req.status == 'Approved' %}
+                        <span style="color: green;">Partnered</span>
+                        {% elif req.status == 'Rejected' %}
+                        <span style="color: red;">Declined</span>
+                        {% elif req.status == 'Counter-Offer' %}
+                        <span style="color: blue;">Counter: ${{ "{:,.2f}".format(req.counter_amount or 0) }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('portal_delete_request', request_id=req.id) }}" method="POST"
+                            onsubmit="return confirm('Delete this request?')">
+                            <button type="submit" class="btn btn-danger small-btn" style="padding: 5px 10px;"><i
+                                    class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not requests %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No requests yet.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card" style="text-align: left;">
+        <h3>Influencer Budget Request</h3>
+        <form action="{{ url_for('portal_content_request') }}" method="POST">
+            <div class="form-group">
+                <label>Influencer Name</label>
+                <input type="text" name="influencer_name" class="form-control" placeholder="e.g. Jane Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Amount needed ($)</label>
+                <input type="number" name="amount" class="form-control" placeholder="0.00" step="0.01" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Request Payment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

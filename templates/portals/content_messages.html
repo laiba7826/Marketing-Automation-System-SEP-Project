@@ -1,0 +1,89 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Messages - GFS Creator{% endblock %}
+{% block header %}Creative Discussions{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+    <!-- Message List -->
+    <div class="card" style="padding: 0;">
+        <div
+            style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Inbox</h3>
+            <button class="btn btn-primary small-btn"
+                onclick="document.getElementById('composeModal').style.display='flex'">New</button>
+        </div>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            {% for msg in messages %}
+            <li style="padding: 15px; border-bottom: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <strong>{{ msg.sender_name }} ({{ msg.sender_role or 'Unknown' }})</strong>
+                    <small>{{ msg.created_at[:16] if msg.created_at else 'N/A' }}</small>
+                </div>
+                <h4 style="margin: 5px 0;">{{ msg.subject }}</h4>
+                <p style="margin: 0; color: #555;">{{ msg.content }}</p>
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                    {% if msg.sender_role %}
+                    <button class="btn btn-primary small-btn"
+                        onclick="replyTo('{{ msg.sender_role }}', '{{ msg.subject }}')">Reply</button>
+                    {% endif %}
+                    <form action="{{ url_for('delete_message', msg_id=msg.id) }}" method="POST"
+                        style="display: inline;">
+                        <button type="submit" class="btn btn-danger small-btn"
+                            onclick="return confirm('Delete this message?')">Delete</button>
+                    </form>
+                </div>
+                <div style="margin-top: 5px; font-size: 0.8rem; color: #999;">To: {{ msg.receiver_role }}</div>
+            </li>
+            {% endfor %}
+            {% if not messages %}
+            <li style="padding: 20px; text-align: center; color: #999;">No messages found.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Compose Modal -->
+    <div id="composeModal"
+        style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+        <div class="card" style="width: 500px; background: white; padding: 20px; text-align: left;">
+            <h3 id="modalTitle">New Message</h3>
+            <form action="{{ url_for('send_message') }}" method="POST">
+                <div class="form-group">
+                    <label>To Role</label>
+                    <select name="receiver_role" id="receiver_role" class="form-control">
+                        <option>Marketing Team</option>
+                        <option>Project Supervisor</option>
+                        <option>Sales Team</option>
+                        <option>Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" name="subject" id="subject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="content" class="form-control" rows="5" required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn" onclick="closeCompose()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function replyTo(role, subject) {
+        document.getElementById('modalTitle').innerText = 'Reply to ' + role;
+        document.getElementById('receiver_role').value = role;
+        document.getElementById('subject').value = 'Re: ' + subject;
+        document.getElementById('composeModal').style.display = 'flex';
+    }
+
+    function closeCompose() {
+        document.getElementById('composeModal').style.display = 'none';
+    }
+</script>
+{% endblock %}

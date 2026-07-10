@@ -1,0 +1,41 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}My Profile - GFS Sales{% endblock %}
+{% block header %}My Profile{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('portal_sales_update_profile') }}" method="POST">
+    <div class="grid-2">
+        <div class="card">
+            <h4>General Information</h4>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="full_name" class="form-control" value="{{ user.full_name or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Primary Email</label>
+                <input type="email" name="email" class="form-control" value="{{ user.email or '' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" class="form-control" value="{{ user.phone or '' }}" required>
+            </div>
+        </div>
+        <div class="card">
+            <h4>Sales Performance</h4>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-chart-line"
+                        style="color: var(--primary-color); margin-right: 10px;"></i> Track Lead Conversion</li>
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-file-invoice-dollar"
+                        style="color: var(--primary-color); margin-right: 10px;"></i> Monitor Revenue Growth</li>
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-users-cog"
+                        style="color: var(--primary-color); margin-right: 10px;"></i> Manage Customer Relations</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; text-align: right;">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+{% endblock %}

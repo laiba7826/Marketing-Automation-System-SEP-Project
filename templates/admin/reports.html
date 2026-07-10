@@ -1,0 +1,51 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Reports - GFS Admin{% endblock %}
+{% block header %}Financial Reports{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+    <div class="card">
+        <h3>Budget Allocation Summary</h3>
+        <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span>Total Approved Budget</span>
+                <strong style="color: green;">${{ "{:,.2f}".format(total_budget) }}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span>Pending Approvals Volume</span>
+                <strong style="color: orange;">${{ "{:,.2f}".format(total_pending) }}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                <span>Projected Quarterly Spend</span>
+                <strong style="color: var(--primary-color);">${{ "{:,.2f}".format(total_budget * 1.2) }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>System Performance</h3>
+        <div style="margin-top: 20px;">
+            <p>Database Optimization: <strong style="color: green;">98%</strong></p>
+            <p>User Retention Rate: <strong style="color: green;">85%</strong></p>
+            <p>Response Latency: <strong style="color: green;">24ms</strong></p>
+        </div>
+    </div>
+</div>
+
+<div class="table-container" style="margin-top: 30px;">
+    <h3>Monthly Financial Trend</h3>
+    <div
+        style="height: 200px; background: #f9f9f9; border-radius: 8px; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px;">
+        <div style="width: 40px; height: 30%; background: var(--primary-color);"></div>
+        <div style="width: 40px; height: 55%; background: var(--primary-color);"></div>
+        <div style="width: 40px; height: 45%; background: var(--primary-color);"></div>
+        <div style="width: 40px; height: 80%; background: var(--secondary-color);"></div>
+        <div style="width: 40px; height: 65%; background: var(--primary-color);"></div>
+        <div style="width: 40px; height: 90%; background: var(--primary-color);"></div>
+    </div>
+    <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+        <small>JUL</small><small>AUG</small><small>SEP</small><small>OCT</small><small>NOV</small><small>DEC</small>
+    </div>
+</div>
+{% endblock %}

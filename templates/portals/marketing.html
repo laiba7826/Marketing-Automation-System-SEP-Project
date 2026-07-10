@@ -1,0 +1,117 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Marketing Dashboard - GFS{% endblock %}
+{% block header %}Marketing Workspace{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+    <div class="card" style="text-align: left; background: var(--secondary-color); color: var(--primary-color);">
+        <h3>Create New Campaign</h3>
+        <p>Submit a budget proposal for supervisor review.</p>
+        <form action="{{ url_for('portal_marketing_request') }}" method="POST" style="margin-top: 15px;">
+            <div class="form-group">
+                <input type="text" name="title" class="form-control" placeholder="Campaign Title" required
+                    style="background: white;">
+            </div>
+            <div class="form-group">
+                <input type="number" name="amount" class="form-control" placeholder="Requested Budget ($)" required
+                    style="background: white;">
+            </div>
+            <button type="submit" class="btn" style="background: var(--primary-color); color: white;">Submit
+                Proposal</button>
+        </form>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-bullseye"></i>
+        </div>
+        <div class="stat-info">
+            <h3>{{ goal_completion }}%</h3>
+            <p>Goal Completion</p>
+        </div>
+    </div>
+</div>
+
+<div class="table-container" style="margin-top: 30px;">
+    <h3>Recent Inquiries</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in recent_contacts %}
+            <tr>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.message[:50] }}{% if contact.message|length > 50 %}...{% endif %}</td>
+                <td>{{ contact.submitted_at[:10] if contact.submitted_at else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+            {% if not recent_contacts %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No inquiries found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="table-container" style="margin-top: 30px;">
+    <h3>My Campaign Requests</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Feedback</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.title }}</td>
+                <td>
+                    {% if campaign.status == 'Pending' %}
+                    <span class="badge" style="background: orange; color: white;">Pending</span>
+                    {% elif campaign.status == 'Approved' %}
+                    <span class="badge" style="background: green; color: white;">Approved</span>
+                    {% elif campaign.status == 'Rejected' %}
+                    <span class="badge" style="background: red; color: white;">Rejected</span>
+                    {% elif campaign.status == 'Counter-Offer' %}
+                    <span class="badge" style="background: blue; color: white;">Counter Offer</span>
+                    {% endif %}
+                </td>
+                <td>${{ "{:,.2f}".format(campaign.amount or 0) }}</td>
+                <td>
+                    {% if campaign.status == 'Counter-Offer' %}
+                    Supervisor offered: ${{ "{:,.2f}".format(campaign.counter_amount or 0) }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{{ url_for('portal_delete_request', request_id=campaign.id) }}" method="POST"
+                        onsubmit="return confirm('Delete this request?')">
+                        <button type="submit" class="btn btn-danger small-btn" style="padding: 5px 10px;"><i
+                                class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not campaigns %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No campaigns submitted yet.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Campaigns - GFS Admin{% endblock %}
+{% block header %}Campaign Management{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>System-Wide Campaigns</h3>
+        <span class="badge" style="background: var(--primary-color); color: white;">Total: {{ campaigns|length }}</span>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Entity</th>
+                <th>Proposed By</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.title }}</td>
+                <td>{{ campaign.type }}</td>
+                <td>{{ campaign.proposed_by }}</td>
+                <td>${{ "{:,.2f}".format(campaign.amount) }}</td>
+                <td>
+                    {% if campaign.status == 'Pending' %}
+                    <span style="color: orange;">Pending</span>
+                    {% elif campaign.status == 'Approved' %}
+                    <span style="color: green;">Live</span>
+                    {% elif campaign.status == 'Rejected' %}
+                    <span style="color: red;">Rejected</span>
+                    {% elif campaign.status == 'Counter-Offer' %}
+                    <span style="color: blue;">Countered</span>
+                    {% endif %}
+                </td>
+                <td>{{ campaign.created_at[:10] }}</td>
+            </tr>
+            {% endfor %}
+            {% if not campaigns %}
+            <tr>
+                <td colspan="6" style="text-align: center;">No campaign data found in the system.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

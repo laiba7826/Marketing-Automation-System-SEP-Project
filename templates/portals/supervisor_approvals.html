@@ -1,0 +1,103 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Approvals - GFS Supervisor{% endblock %}
+{% block header %}Pending Approvals{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>Budget & Campaign Approvals</h3>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title/Entity</th>
+                <th>Type</th>
+                <th>Proposed By</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in requests %}
+            <tr>
+                <td>{{ req.title }}</td>
+                <td>{{ req.type }}</td>
+                <td>{{ req.proposed_by }}</td>
+                <td>${{ "{:,.2f}".format(req.amount or 0) }}</td>
+                <td>
+                    {% if req.status == 'Pending' %}
+                    <span style="color: orange;">Pending Review</span>
+                    {% elif req.status == 'Approved' %}
+                    <span style="color: green;">Approved</span>
+                    {% elif req.status == 'Rejected' %}
+                    <span style="color: red;">Rejected</span>
+                    {% elif req.status == 'Counter-Offer' %}
+                    <span style="color: blue;">Counter: ${{ "{:,.2f}".format(req.counter_amount or 0) }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if req.status == 'Pending' %}
+                    <div style="display: flex; gap: 5px;">
+                        <form action="{{ url_for('portal_supervisor_request_action', request_id=req.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="btn btn-primary small-btn">Approve</button>
+                        </form>
+                        <form action="{{ url_for('portal_supervisor_request_action', request_id=req.id) }}"
+                            method="POST" style="display: inline;">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="btn btn-danger small-btn">Reject</button>
+                        </form>
+                        <button class="btn btn-secondary small-btn"
+                            onclick="showCounterModal('{{ req.id }}', '{{ req.title }}', '{{ req.amount }}')">Counter</button>
+                    </div>
+                    {% else %}
+                    <span class="badge">{{ req.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not requests %}
+            <tr>
+                <td colspan="6" style="text-align: center;">No pending requests found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Counter Offer Modal -->
+<div id="counterModal"
+    style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div class="card" style="width: 400px; text-align: left; background: white; padding: 20px; border-radius: 8px;">
+        <h3>Make Counter Offer</h3>
+        <p id="counterTitle" style="margin-top: 10px;"></p>
+        <p>Original Request: <strong id="originalAmount"></strong></p>
+        <form action="" id="counterForm" method="POST" style="margin-top: 20px;">
+            <input type="hidden" name="action" value="counter">
+            <div class="form-group">
+                <label>Our Offer Amount ($)</label>
+                <input type="number" name="counter_amount" class="form-control" step="0.01" required
+                    placeholder="Enter amount">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn"
+                    onclick="document.getElementById('counterModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Send Counter Offer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showCounterModal(id, title, amount) {
+        document.getElementById('counterTitle').innerText = "Proposal: " + title;
+        document.getElementById('originalAmount').innerText = "$" + amount;
+        document.getElementById('counterForm').action = "/portal/supervisor/request/action/" + id;
+        document.getElementById('counterModal').style.display = 'flex';
+    }
+</script>
+{% endblock %}

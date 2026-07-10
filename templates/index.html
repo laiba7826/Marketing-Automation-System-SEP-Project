@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="hero">
+    <div class="container hero-content">
+        <div>
+            <h1>{{ content.hero.title }}</h1>
+            <p>{{ content.hero.subtitle }}</p>
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Login to Your Portal</a>
+        </div>
+    </div>
+</header>
+
+<!-- Overview Section -->
+<section class="section-padding">
+    <div class="container">
+        <h2 class="section-title">{{ content.why_gfs.title }}</h2>
+        <div class="grid-2">
+            <div>
+                <h3>Unified Campaign Management</h3>
+                <p>{{ content.why_gfs.desc }}</p>
+                <br>
+                <ul>
+                    <li><i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Streamlined approval
+                        workflows</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Real-time budget
+                        tracking</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Integrated influencer
+                        collaboration</li>
+                </ul>
+            </div>
+            <div class="text-center">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Dashboard Preview"
+                    style="max-width: 100%; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Roles Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <h2 class="section-title">Designed for Every Role</h2>
+        <div class="grid-4">
+            <div class="card">
+                <i class="fas fa-user-tie card-icon"></i>
+                <h3>Project Supervisor</h3>
+                <p>Approve plans, manage budgets, and oversee the entire campaign lifecycle.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-bullhorn card-icon"></i>
+                <h3>Marketing Team</h3>
+                <p>Create detailed campaign plans and submit budget proposals effortlessly.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-pen-nib card-icon"></i>
+                <h3>Content Creator</h3>
+                <p>Schedule content, collaborate with influencers, and manage requests.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3>Sales Team</h3>
+                <p>Track progress and view detailed sales reports to align with marketing goals.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-padding text-center" style="background-color: var(--primary-color); color: var(--white);">
+    <div class="container">
+        <h2>{{ content.cta.title }}</h2>
+        <p style="margin-bottom: 30px;">{{ content.cta.subtitle }}</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Contact Sales</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Technology Stack - GFS System{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title">Technology Stack</h1>
+        <p class="text-center" style="max-width: 700px; margin: 0 auto 50px;">
+            Built on robust, modern technologies to ensure performance, security, and scalability.
+        </p>
+
+        <div class="grid-3">
+            {% for item in tech_items %}
+            <div class="card">
+                <i class="{{ item.icon }} card-icon"></i>
+                <h3>{{ item.category }}</h3>
+                <p><strong>{{ item.title }}</strong></p>
+                <p>{{ item.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center" style="margin-top: 50px;">
+            <h3>Key Technical Benefits</h3>
+            <div class="grid-2" style="margin-top: 30px; text-align: left;">
+                <div>
+                    <h4><i class="fas fa-shield-alt" style="color: var(--secondary-color);"></i> Security</h4>
+                    <p>Implemented with secure session management, input validation, and protection against common
+                        vulnerabilities.</p>
+                </div>
+                <div>
+                    <h4><i class="fas fa-bolt" style="color: var(--secondary-color);"></i> Performance</h4>
+                    <p>Optimized code and lightweight resources ensure fast load times and smooth interactions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

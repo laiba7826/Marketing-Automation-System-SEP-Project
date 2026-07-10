@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GFS Portal{% endblock %}</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{{ theme + '-theme' if theme and theme != 'default' else '' }}">
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3>GFS Portal</h3>
+                <p style="font-size: 0.8rem; color: #ccc;">{{ role }} View</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('portal_supervisor' if role == 'Project Supervisor' else 'portal_marketing' if role == 'Marketing Team' else 'portal_content' if role == 'Content Creator' else 'portal_sales') }}"
+                        class="{{ 'active' if request.endpoint in ['portal_supervisor', 'portal_marketing', 'portal_content', 'portal_sales'] else '' }}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a></li>
+
+                <!-- Profile after Dashboard -->
+                {% if role == 'Project Supervisor' %}
+                <li><a href="{{ url_for('portal_supervisor_profile') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_profile' else '' }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a></li>
+                {% elif role == 'Marketing Team' %}
+                <li><a href="{{ url_for('portal_marketing_profile') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing_profile' else '' }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a></li>
+                {% elif role == 'Content Creator' %}
+                <li><a href="{{ url_for('portal_content_profile') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content_profile' else '' }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a></li>
+                {% elif role == 'Sales Team' %}
+                <li><a href="{{ url_for('portal_sales_profile') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_sales_profile' else '' }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a></li>
+                {% endif %}
+
+                <!-- Role specific items -->
+                {% if role == 'Project Supervisor' %}
+                <li><a href="{{ url_for('portal_supervisor_approvals') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_approvals' else '' }}">
+                        <i class="fas fa-check-double"></i> Approvals
+                    </a></li>
+                <li><a href="{{ url_for('portal_supervisor_budget') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_budget' else '' }}">
+                        <i class="fas fa-wallet"></i> Budget Control
+                    </a></li>
+                <li><a href="{{ url_for('portal_supervisor_training') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_training' else '' }}">
+                        <i class="fas fa-chalkboard-teacher"></i> Conduct Training
+                    </a></li>
+                {% elif role == 'Marketing Team' %}
+                <li><a href="{{ url_for('portal_marketing_campaigns') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing_campaigns' else '' }}">
+                        <i class="fas fa-layer-group"></i> Campaigns
+                    </a></li>
+                <li><a href="{{ url_for('portal_marketing') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing' else '' }}">
+                        <i class="fas fa-plus-circle"></i> Proposals
+                    </a></li>
+                <li><a href="{{ url_for('portal_marketing_review') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing_review' else '' }}">
+                        <i class="fas fa-tasks"></i> Review Content
+                    </a></li>
+                {% elif role == 'Content Creator' %}
+                <li><a href="{{ url_for('portal_content_schedule') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content_schedule' else '' }}">
+                        <i class="fas fa-calendar-alt"></i> Schedule
+                    </a></li>
+                <li><a href="{{ url_for('portal_content') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content' else '' }}">
+                        <i class="fas fa-hashtag"></i> Influencers
+                    </a></li>
+                <li><a href="{{ url_for('portal_content_uploads') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content_uploads' else '' }}">
+                        <i class="fas fa-file-upload"></i> My Uploads
+                    </a></li>
+                {% elif role == 'Sales Team' %}
+                <li><a href="{{ url_for('portal_sales_reports') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_sales_reports' else '' }}">
+                        <i class="fas fa-chart-pie"></i> Sales Reports
+                    </a></li>
+                <li><a href="{{ url_for('portal_sales_leads') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_sales_leads' else '' }}">
+                        <i class="fas fa-users"></i> Leads
+                    </a></li>
+                {% endif %}
+
+                <!-- Messages -->
+                {% if role == 'Project Supervisor' %}
+                <li><a href="{{ url_for('portal_supervisor_messages') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_messages' else '' }}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a></li>
+                {% elif role == 'Marketing Team' %}
+                <li><a href="{{ url_for('portal_marketing_messages') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing_messages' else '' }}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a></li>
+                {% elif role == 'Content Creator' %}
+                <li><a href="{{ url_for('portal_content_messages') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content_messages' else '' }}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a></li>
+                {% elif role == 'Sales Team' %}
+                <li><a href="{{ url_for('portal_sales_messages') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_sales_messages' else '' }}">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a></li>
+                {% endif %}
+
+                <!-- Settings at last before logout -->
+                {% if role == 'Project Supervisor' %}
+                <li><a href="{{ url_for('portal_supervisor_settings') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_supervisor_settings' else '' }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                {% elif role == 'Marketing Team' %}
+                <li><a href="{{ url_for('portal_marketing_settings') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_marketing_settings' else '' }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                {% elif role == 'Content Creator' %}
+                <li><a href="{{ url_for('portal_content_settings') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_content_settings' else '' }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                {% elif role == 'Sales Team' %}
+                <li><a href="{{ url_for('portal_sales_settings') }}"
+                        class="{{ 'active' if request.endpoint == 'portal_sales_settings' else '' }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                {% endif %}
+
+                <li><a href="{{ url_for('logout') }}"
+                        style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a></li>
+            </ul>
+        </nav>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <header class="admin-header">
+                <h2>{% block header %}{% endblock %}</h2>
+                <div class="user-info">
+                    <span>{{ session['username'] }}</span> <i class="fas fa-user fa-lg"
+                        style="margin-left: 10px; color: var(--primary-color);"></i>
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-header">
+                            <p>Logged in as</p>
+                            <h4>{{ role }}</h4>
+                        </div>
+                        {% if role == 'Project Supervisor' %}
+                        <a href="{{ url_for('portal_supervisor_profile') }}" class="user-dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="{{ url_for('portal_supervisor_settings') }}" class="user-dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        {% elif role == 'Marketing Team' %}
+                        <a href="{{ url_for('portal_marketing_profile') }}" class="user-dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="{{ url_for('portal_marketing_settings') }}" class="user-dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        {% elif role == 'Content Creator' %}
+                        <a href="{{ url_for('portal_content_profile') }}" class="user-dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="{{ url_for('portal_content_settings') }}" class="user-dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        {% elif role == 'Sales Team' %}
+                        <a href="{{ url_for('portal_sales_profile') }}" class="user-dropdown-item">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="{{ url_for('portal_sales_settings') }}" class="user-dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}" class="user-dropdown-item" style="color: #dc3545;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

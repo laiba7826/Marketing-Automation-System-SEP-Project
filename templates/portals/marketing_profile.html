@@ -1,0 +1,60 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Profile - GFS Marketing{% endblock %}
+{% block header %}Marketing Profile{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; align-items: center; margin-bottom: 30px;">
+        <div
+            style="width: 100px; height: 100px; background: var(--secondary-color); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-right: 30px;">
+            <i class="fas fa-bullhorn"></i>
+        </div>
+        <div>
+            <h2>Marketing Team</h2>
+            <p style="color: #777;">Campaign Management & Strategy</p>
+            <span class="badge"
+                style="background: #2ecc71; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">Active
+                Team Account</span>
+        </div>
+    </div>
+
+    <form action="{{ url_for('portal_marketing_update_profile') }}" method="POST">
+        <div class="grid-2">
+            <div>
+                <h4>General Information</h4>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" class="form-control" value="{{ user.full_name or '' }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Primary Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ user.email or '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" class="form-control" value="{{ user.phone or '' }}" required>
+                </div>
+            </div>
+            <div>
+                <h4>Team Permissions</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-check-circle"
+                            style="color: green; margin-right: 10px;"></i> Propose Campaign Budgets</li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-check-circle"
+                            style="color: green; margin-right: 10px;"></i> Execute Approved Strategies</li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-check-circle"
+                            style="color: green; margin-right: 10px;"></i> Access Analytics</li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><i class="fas fa-check-circle"
+                            style="color: green; margin-right: 10px;"></i> Collaborate with Creators</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: right;">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

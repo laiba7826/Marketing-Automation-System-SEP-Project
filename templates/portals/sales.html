@@ -1,0 +1,98 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Sales Dashboard - GFS{% endblock %}
+{% block header %}Sales Performance{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
+        <div class="stat-info">
+            <h3>{{ leads_count }}</h3>
+            <p>Total Leads</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <div class="stat-info">
+            <h3>${{ "{:,.2f}".format(total_revenue) }}</h3>
+            <p>Conversion Revenue</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+        <div class="stat-info">
+            <h3>{{ target_completion }}%</h3>
+            <p>Monthly Target</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="table-container">
+        <h3>Recent Inquiries</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in recent_contacts %}
+                <tr>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.message[:50] }}{% if contact.message|length > 50 %}...{% endif %}</td>
+                    <td>{{ contact.submitted_at[:10] if contact.submitted_at else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+                {% if not recent_contacts %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No inquiries found.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-container">
+        <h3>Recent Leads</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in recent_leads %}
+                <tr>
+                    <td>{{ lead.name }}</td>
+                    <td>{{ lead.status }}</td>
+                    <td>{{ lead.created_at[:10] if lead.created_at else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('portal_sales_leads') }}" class="btn btn-primary"
+            style="margin-top: 15px; display: inline-block;">View All Leads</a>
+    </div>
+
+    <div class="card">
+        <h3>Quick Add Lead</h3>
+        <form action="{{ url_for('portal_sales_add_lead') }}" method="POST">
+            <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Prospect Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Lead</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

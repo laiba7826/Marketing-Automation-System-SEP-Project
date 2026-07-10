@@ -1,0 +1,81 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Active Campaigns - GFS Marketing{% endblock %}
+{% block header %}Active Campaigns{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>Approved Campaigns</h3>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Campaign Title</th>
+                <th>Budget</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.title }}</td>
+                <td>${{ "{:,.2f}".format(campaign.amount or 0) }}</td>
+                <td>
+                    {% if campaign.status == 'Counter-Offer' %}
+                    <span style="color: #007bff; font-weight: bold;">Counter-Offer: ${{
+                        "{:,.2f}".format(campaign.counter_amount or 0) }}</span>
+                    {% else %}
+                    <span style="color: green;">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="width: 100%; background: #eee; height: 8px; border-radius: 4px;">
+                        <div
+                            style="width: {{ campaign.progress }}%; background: var(--secondary-color); height: 8px; border-radius: 4px;">
+                        </div>
+                    </div>
+                    <small>{{ campaign.progress }}% Complete</small>
+                </td>
+                <td>
+                    <div style="margin-bottom: 10px;">
+                        <form action="{{ url_for('portal_marketing_update_progress', campaign_id=campaign.id) }}"
+                            method="POST" style="display: flex; gap: 5px;">
+                            <input type="number" name="progress" value="{{ campaign.progress }}" min="0" max="100"
+                                class="form-control" style="width: 70px; padding: 2px 5px; height: 30px;">
+                            <button type="submit" class="btn btn-primary small-btn"
+                                style="padding: 2px 10px;">Update</button>
+                        </form>
+                    </div>
+                    <div>
+                        <form action="{{ url_for('portal_marketing_assign_creator', campaign_id=campaign.id) }}"
+                            method="POST" style="display: flex; flex-direction: column; gap: 5px;">
+                            <select name="creator_id" class="form-control"
+                                style="padding: 2px 5px; height: 30px; font-size: 0.8rem;">
+                                <option value="">Assign Creator...</option>
+                                {% for creator in creators %}
+                                <option value="{{ creator.id }}" {{ 'selected' if campaign.assigned_to==creator.id
+                                    else '' }}>
+                                    {{ creator.username }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-secondary small-btn"
+                                style="padding: 2px 10px;">Assign</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not campaigns %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No active campaigns. Go to Proposals to submit one!</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

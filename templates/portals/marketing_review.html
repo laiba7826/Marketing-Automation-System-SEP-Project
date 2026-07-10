@@ -1,0 +1,145 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Review Content - GFS Marketing{% endblock %}
+{% block header %}Content Review Queue{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-revision {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .review-card {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #eee;
+    }
+
+    .review-info h4 {
+        margin: 0 0 5px 0;
+    }
+
+    .review-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .review-preview {
+        width: 150px;
+        text-align: center;
+    }
+
+    .review-actions {
+        display: flex;
+        gap: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="review-queue">
+    {% for item in uploads %}
+    <div class="review-card">
+        <div class="review-info">
+            <h4>{{ item.title }}</h4>
+            <p><strong>Creator:</strong> {{ item.creator_name }}</p>
+            <p><strong>Platform:</strong> {{ item.platform }} | <strong>Type:</strong> {{ item.content_type }}</p>
+            <p><strong>Date:</strong> {{ item.created_at }}</p>
+            <div style="margin-top: 10px;">
+                <span
+                    class="status-badge status-{{ 'pending' if item.status == 'Pending Review' else 'approved' if item.status == 'Approved' else 'revision' }}">
+                    {{ item.status }}
+                </span>
+            </div>
+            {% if item.feedback %}
+            <p style="margin-top: 10px; font-style: italic; color: var(--accent-color);">Last Feedback: {{ item.feedback
+                }}</p>
+            {% endif %}
+        </div>
+
+        <div class="review-preview">
+            {% if item.content_type == 'Graphic' %}
+            <img src="{{ url_for('static', filename=item.file_path) }}" class="preview-img"
+                style="max-width: 100%; border-radius: 5px;">
+            <br><a href="{{ url_for('static', filename=item.file_path) }}" target="_blank" class="small-btn">View
+                Full</a>
+            {% else %}
+            <i class="fas fa-video fa-3x" style="color: #ccc; margin-bottom: 10px;"></i>
+            <br><a href="{{ item.drive_link }}" target="_blank" class="btn btn-primary small-btn">Google Drive</a>
+            {% endif %}
+        </div>
+
+        <div class="review-actions">
+            {% if item.status == 'Pending Review' or item.status == 'Revision Requested' %}
+            <button onclick="openReviewModal({{ item.id }}, '{{ item.title }}')" class="btn btn-primary small-btn">Take
+                Action</button>
+            {% else %}
+            <button disabled class="btn small-btn" style="background: #ccc; cursor: not-allowed;">Reviewed</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not uploads %}
+    <div class="card" style="text-align: center; padding: 50px;">
+        <i class="fas fa-check-circle fa-4x" style="color: var(--secondary-color); margin-bottom: 20px;"></i>
+        <h3>All caught up!</h3>
+        <p>No content pending review.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal"
+    style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div class="card" style="width: 450px; text-align: left; background: white; padding: 25px;">
+        <h3 id="modalTitle">Review Content</h3>
+        <form id="reviewForm" method="POST">
+            <div class="form-group">
+                <label>Leave Feedback / Modification Requests</label>
+                <textarea name="feedback" class="form-control" rows="4"
+                    placeholder="Mention what needs to be changed..."></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn"
+                    onclick="document.getElementById('reviewModal').style.display='none'">Cancel</button>
+                <button type="submit" name="action" value="revision" class="btn btn-delete">Request Revision</button>
+                <button type="submit" name="action" value="approve" class="btn btn-primary">Approve Content</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openReviewModal(id, title) {
+        document.getElementById('modalTitle').innerText = 'Reviewing: ' + title;
+        document.getElementById('reviewForm').action = '/portal/marketing/review/action/' + id;
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+</script>
+{% endblock %}

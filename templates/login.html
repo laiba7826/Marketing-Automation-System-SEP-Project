@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - GFS Portal{% endblock %}
+
+{% block content %}
+<section class="login-section">
+    <div class="container login-container">
+        <h1 class="login-title">Client Login Portal</h1>
+
+        <div class="login-card">
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="role" style="color: #64748b; font-size: 0.9rem; font-weight: 500;">Select Role</label>
+                    <select id="role" name="role" class="form-control"
+                        style="background-color: #f8fafc; border-color: #e2e8f0;">
+                        <option value="Admin">Admin Dashboard</option>
+                        <option value="Project Supervisor">Project Supervisor</option>
+                        <option value="Marketing Team">Marketing Team</option>
+                        <option value="Content Creator">Content Creator</option>
+                        <option value="Sales Team">Sales Team</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="username" style="color: #64748b; font-size: 0.9rem; font-weight: 500;">Username</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                        placeholder="Enter your username" style="background-color: #f8fafc; border-color: #e2e8f0;"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" style="color: #64748b; font-size: 0.9rem; font-weight: 500;">Password</label>
+                    <input type="password" id="password" name="password" class="form-control"
+                        placeholder="Enter your password" style="background-color: #f8fafc; border-color: #e2e8f0;"
+                        required>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; padding: 14px; font-weight: 600; background: #1e293b; border: none; border-radius: 8px; margin-top: 10px;">Sign
+                    In</button>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="javascript:void(0)"
+                        onclick="alert('Please contact your admin department for password recovery.')"
+                        style="font-size: 0.85rem; color: #64748b; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.3s;"
+                        onmouseover="this.style.borderColor='#64748b'"
+                        onmouseout="this.style.borderColor='transparent'">Forgot your password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
