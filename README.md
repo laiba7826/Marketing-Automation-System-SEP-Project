@@ -165,7 +165,7 @@ Automation-System
 ## 🖼️ Landing Page Preview
 
 <p align="center">
-  <img src="assets/landing-page.png" alt="MarkAuto Landing Page" width="100%">
+  <img src="1.png" alt="MarkAuto Landing Page" width="100%">
 </p>
 
 
@@ -173,8 +173,8 @@ Automation-System
 
 | Team Member | Contribution |
 |------------|--------------|
-| **Laiba Idrees** | Backend Development, Database Integration, Flask Development, System Logic, UML Diagrams & System Design |
-| **Sadia Shoaib** | Frontend Development (HTML, CSS, JavaScript), UI Design |
+| **Laiba Idrees** | Backend Development,Flask Development, System Logic, UML Diagrams,Class Diagram,Sequence Diagram,Object diagram & System Design |
+| **Sadia Shoaib** | Frontend Development (HTML, CSS, JavaScript), UI Design,Database Integration |
 | **Manal Arshad** | Project Documentation & Report |
 | **Ali Raza** | Project Documentation & Report |
 | **Alishba Batool** | Project Documentation & Report |
